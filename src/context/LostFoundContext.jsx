@@ -1,9 +1,9 @@
 import React, { createContext, useState } from 'react';
 
-// Create the Context
+// Create Context
 export const LostFoundContext = createContext();
 
-// Context Provider Component
+// Context Provider
 export const LostFoundProvider = ({ children }) => {
   // Simple mock user state (no real auth)
   const [user, setUser] = useState(null);
@@ -11,17 +11,14 @@ export const LostFoundProvider = ({ children }) => {
   // Reported items tracked via context (shared across components)
   const [reportedItems, setReportedItems] = useState([]);
 
-  // Add a new reported item
   const addReportedItem = (item) => {
     setReportedItems((prev) => [item, ...prev]);
   };
 
-  // Login sets a mock user
   const login = (name, email) => {
     setUser({ name, email });
   };
 
-  // Logout clears the user
   const logout = () => {
     setUser(null);
   };

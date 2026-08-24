@@ -1,4 +1,4 @@
-// Mock data for Lost & Found items
+// Mock dataset of 8 Lost & Found items (as required by Exp 2)
 const lostFoundData = [
   {
     id: 1,
@@ -74,12 +74,12 @@ const lostFoundData = [
   }
 ];
 
-// Simulate an API call with a delay (mock data fetching)
+// Asynchronous mock API data fetching function with 1.5s delay to show loading spinner
 export const fetchLostFoundItems = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(lostFoundData);
-    }, 1500); // 1.5 second delay to show loading state
+    }, 1500);
   });
 };
 

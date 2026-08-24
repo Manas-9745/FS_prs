@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import lostFoundData, { fetchLostFoundItems } from '../data/lostFoundData';
 
-// Custom Hook: useLostItems
-// Encapsulates all data fetching logic for Lost & Found items
+// Custom Hook: useLostItems()
+// Encapsulates data fetching, loading, error states, refetching, and state updates
 const useLostItems = () => {
   const [items, setItems] = useState([]);       // fetched items (useState)
   const [loading, setLoading] = useState(true);  // loading state (useState)
   const [error, setError] = useState(null);      // error state (useState)
 
-  // Function to fetch data (can be triggered on mount or by user click)
   const loadItems = useCallback(async (simulateError = false) => {
     try {
       setLoading(true);
@@ -16,9 +15,9 @@ const useLostItems = () => {
       
       if (simulateError) {
         // Simulate an API network error
-        await new Promise((_, reject) => setTimeout(() => reject(new Error("Simulated 500 Network Error: Server unreachable")), 1200));
+        await new Promise((_, reject) => setTimeout(() => reject(new Error("Simulated 500 Network Error: Server unreachable")), 1000));
       } else {
-        const data = await fetchLostFoundItems(); // simulate API call with 1.5s delay
+        const data = await fetchLostFoundItems(); // mock data fetch with 1.5s delay
         setItems(data);
       }
       setLoading(false);
@@ -28,22 +27,19 @@ const useLostItems = () => {
     }
   }, []);
 
-  // useEffect runs on component mount
+  // useEffect runs on component mount (empty dependency array)
   useEffect(() => {
     loadItems();
-  }, [loadItems]); // runs once when loadItems is defined
+  }, [loadItems]);
 
-  // Function to add a new item to the list
   const addItem = (newItem) => {
     setItems((prev) => [newItem, ...prev]);
   };
 
-  // Function to trigger refetch
   const refetch = () => {
     loadItems(false);
   };
 
-  // Function to trigger simulated error state
   const triggerError = () => {
     loadItems(true);
   };
