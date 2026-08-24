@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext } from 'react';
+import React, { useState, useMemo, useContext, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HeroSection from './components/HeroSection';
@@ -14,8 +14,25 @@ function MainApp() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  // Toast notification state for UI popups
+  const [toastMessage, setToastMessage] = useState(null);
+
+  const showToast = (title, hookName) => {
+    setToastMessage({ title, hookName });
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 4000);
+  };
+
   // 2. Custom Hook: useLostItems() - encapsulates data fetching, loading & error states
   const { items, loading, error, addItem } = useLostItems();
+
+  // Show toast when custom hook finishes data fetching
+  useEffect(() => {
+    if (!loading && items.length > 0) {
+      showToast(`Loaded ${items.length} items from mock data source`, 'useEffect() + useLostItems()');
+    }
+  }, [loading, items.length]);
 
   // 3. useContext() - consuming user authentication state and login function
   const { user, login } = useContext(LostFoundContext);
@@ -31,6 +48,7 @@ function MainApp() {
   // Handle adding new items (updates custom hook state & switches to dashboard)
   const handleAddItem = (newItem) => {
     addItem(newItem);
+    showToast(`New item added: "${newItem.name}"`, 'useState() + addItem() in Custom Hook');
     if (currentPage !== 'dashboard') {
       setCurrentPage('dashboard');
     }
@@ -52,6 +70,7 @@ function MainApp() {
     e.preventDefault();
     const studentName = loginEmail.split('@')[0] || "Student";
     login(studentName, loginEmail); // Save user in Context
+    showToast(`Logged in as ${studentName} via Context API`, 'useContext(LostFoundContext)');
     setCurrentPage('dashboard');
   };
 
@@ -60,7 +79,12 @@ function MainApp() {
     <>
       <HeroSection setCurrentPage={setCurrentPage} setShowReportModal={setShowReportModal} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Recently Reported</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Recently Reported</h2>
+          <span className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-mono border border-indigo-200">
+            Hook: useLostItems()
+          </span>
+        </div>
         
         {/* Conditional Rendering on Home: Loading / Data */}
         {loading ? (
@@ -79,16 +103,29 @@ function MainApp() {
   // --- 2. DASHBOARD VIEW ---
   const renderDashboard = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          {user && <p className="text-sm text-gray-500 mt-1">Logged in as: <span className="font-semibold text-primary">{user.email}</span></p>}
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <span className="text-xs bg-purple-100 text-purple-800 px-2.5 py-1 rounded-md font-mono font-semibold border border-purple-200">
+              ⚡ Hook: useLostItems()
+            </span>
+          </div>
+          {user ? (
+            <p className="text-sm text-gray-600 mt-1">
+              <span className="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded font-mono mr-1">useContext</span>
+              Logged in as: <span className="font-semibold text-primary">{user.email}</span>
+            </p>
+          ) : (
+            <p className="text-sm text-gray-500 mt-1">Guest Mode • Log in to test Context API</p>
+          )}
         </div>
         <button 
           onClick={() => setShowReportModal(true)}
-          className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium shadow transition"
+          className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium shadow transition flex items-center gap-2"
         >
-          + Report Item
+          <span>+ Report Item</span>
+          <span className="text-xs bg-indigo-700/50 px-1.5 py-0.5 rounded font-mono">Form Hook</span>
         </button>
       </div>
 
@@ -108,7 +145,7 @@ function MainApp() {
         </div>
       </div>
 
-      {/* Search & Filter Controls */}
+      {/* Search & Filter Controls with Hook Indicators */}
       <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-8 flex flex-col sm:flex-row gap-4 items-center">
         <div className="relative flex-grow w-full">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -116,7 +153,7 @@ function MainApp() {
           </div>
           <input 
             type="text" 
-            placeholder="Search items, descriptions, or locations..." 
+            placeholder="Search items, descriptions, or locations... (useState live filtering)" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-primary outline-none transition"
@@ -138,10 +175,10 @@ function MainApp() {
 
       {/* Conditional Rendering: Loading State */}
       {loading && (
-        <div className="text-center py-20 bg-white rounded-xl border border-gray-100 p-8">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-3"></div>
-          <p className="text-lg font-medium text-gray-700">Loading Lost & Found items...</p>
-          <p className="text-sm text-gray-400">Simulating asynchronous data fetching</p>
+        <div className="text-center py-20 bg-white rounded-xl border border-indigo-100 p-8 shadow-sm">
+          <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent mb-4"></div>
+          <p className="text-xl font-bold text-gray-800">Loading Lost & Found items...</p>
+          <p className="text-sm text-indigo-600 font-mono mt-1">Demonstrating: useEffect() + useLostItems() Data Fetching with 1.5s delay</p>
         </div>
       )}
 
@@ -159,6 +196,9 @@ function MainApp() {
           <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <h3 className="text-lg font-medium text-gray-900">No Lost & Found items available.</h3>
           <p className="mt-1 text-gray-500">Try adjusting your search query or filter selection.</p>
+          <span className="inline-block mt-3 text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded font-mono border border-amber-200">
+            Conditional Rendering: filteredItems.length === 0
+          </span>
         </div>
       )}
 
@@ -177,13 +217,16 @@ function MainApp() {
   const renderLogin = () => (
     <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-md border border-gray-100">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Student Login</h2>
-          <p className="text-gray-500 mt-2">Sign in to manage your items</p>
+        <div className="text-center mb-6">
+          <span className="text-xs bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full font-mono font-semibold">
+            Context API + Controlled Form
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900 mt-2">Student Login</h2>
+          <p className="text-gray-500 mt-1">Demonstrates useContext() for authentication</p>
         </div>
         <form className="space-y-6" onSubmit={handleLoginSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address (Controlled Input)</label>
             <input 
               required 
               type="email" 
@@ -194,7 +237,7 @@ function MainApp() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password (Controlled Input)</label>
             <input 
               required 
               type="password" 
@@ -212,7 +255,7 @@ function MainApp() {
             <a href="#" className="text-sm font-medium text-primary hover:text-primary-hover">Forgot password?</a>
           </div>
           <button type="submit" className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-hover transition">
-            Sign In
+            Sign In & Update Context
           </button>
         </form>
       </div>
@@ -220,7 +263,21 @@ function MainApp() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
+      {/* Top Banner indicating Experiment 2 active */}
+      <div className="bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-900 text-white text-xs py-2 px-4 shadow-sm flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="bg-emerald-400 text-gray-900 font-bold px-2 py-0.5 rounded text-[11px]">EXP 2 ACTIVE</span>
+          <span className="font-semibold">React Hooks, Data Fetching & Context API</span>
+        </div>
+        <div className="flex items-center gap-3 font-mono text-[11px] text-indigo-200">
+          <span>useState ✓</span>
+          <span>useEffect ✓</span>
+          <span>useContext ✓</span>
+          <span>useLostItems() ✓</span>
+        </div>
+      </div>
+
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       
       {currentPage === 'home' && renderHome()}
@@ -228,6 +285,17 @@ function MainApp() {
       {currentPage === 'login' && renderLogin()}
 
       <Footer />
+
+      {/* Floating Hook Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 animate-bounce bg-gray-900 text-white px-5 py-3 rounded-xl shadow-2xl border border-indigo-500 flex items-center gap-3 max-w-md">
+          <span className="text-xl">⚡</span>
+          <div>
+            <div className="text-xs font-mono font-bold text-indigo-400 uppercase tracking-wider">{toastMessage.hookName}</div>
+            <div className="text-sm font-medium text-gray-100">{toastMessage.title}</div>
+          </div>
+        </div>
+      )}
 
       <ReportItemModal 
         isOpen={showReportModal} 
