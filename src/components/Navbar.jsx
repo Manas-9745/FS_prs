@@ -1,51 +1,39 @@
-import React, { useContext } from 'react';
-import { LostFoundContext } from '../context/LostFoundContext';
+﻿import React, { useContext } from 'react';
+import { ThemeContext } from '../context/ThemeContext';
 
 const Navbar = ({ currentPage, setCurrentPage }) => {
-  // useContext() - consuming user state from Context
-  const { user, logout } = useContext(LostFoundContext);
+  // useContext() - consumes global ThemeContext for Light/Dark theme switching
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-40">
+    <nav className={`shadow-sm sticky top-0 z-40 transition-colors ${theme === 'dark' ? 'bg-gray-900 text-white border-b border-gray-800' : 'bg-white text-gray-900 border-b border-gray-100'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center cursor-pointer" onClick={() => setCurrentPage('home')}>
-            <span className="text-2xl font-bold text-primary">FoundIt</span>
+            <span className="text-2xl font-bold text-indigo-600">FoundIt</span>
           </div>
           
           <div className="flex items-center space-x-4">
             <button 
               onClick={() => setCurrentPage('home')}
-              className={`px-3 py-2 rounded-md text-sm font-medium transition ${currentPage === 'home' ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
+              className={`px-3 py-2 rounded-md text-sm font-medium transition ${currentPage === 'home' ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:text-gray-900'}`}
             >
               Home
             </button>
             <button 
               onClick={() => setCurrentPage('dashboard')}
-              className={`px-3 py-2 rounded-md text-sm font-medium transition ${currentPage === 'dashboard' ? 'text-primary bg-indigo-50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
+              className={`px-3 py-2 rounded-md text-sm font-medium transition ${currentPage === 'dashboard' ? 'text-indigo-600 bg-indigo-50' : 'text-gray-600 hover:text-gray-900'}`}
             >
               Dashboard
             </button>
 
-            {/* Conditional Rendering: Show user name or Login button */}
-            {user ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-700 font-medium">Welcome, {user.name}</span>
-                <button 
-                  onClick={() => { logout(); setCurrentPage('home'); }}
-                  className="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <button 
-                onClick={() => setCurrentPage('login')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === 'login' ? 'bg-primary text-white shadow-md' : 'bg-primary text-white shadow hover:bg-primary-hover'}`}
-              >
-                Login
-              </button>
-            )}
+            {/* useContext Theme Toggle Button */}
+            <button 
+              onClick={toggleTheme}
+              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow hover:bg-indigo-700 transition flex items-center space-x-1"
+            >
+              <span>{theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}</span>
+            </button>
           </div>
         </div>
       </div>

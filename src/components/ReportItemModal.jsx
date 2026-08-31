@@ -1,11 +1,7 @@
-import React, { useState, useContext } from 'react';
+﻿import React, { useState } from 'react';
 import Modal from './Modal';
-import { LostFoundContext } from '../context/LostFoundContext';
 
 const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
-  // useContext() - to also add item to context's reported items
-  const { addReportedItem } = useContext(LostFoundContext);
-
   // useState() - Controlled Form: every input is controlled by state
   const [formData, setFormData] = useState({
     name: '',
@@ -29,24 +25,20 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent default browser submission
 
-    // Form Validation: check all required fields
-    if (!formData.name || !formData.category || !formData.location || !formData.date || !formData.status || !formData.description) {
-      setValidationError('Please fill all required fields.');
+    // Form Validation (controlled component check)
+    if (!formData.name.trim() || !formData.location.trim() || !formData.description.trim()) {
+      setValidationError('Please fill in all required fields.');
       return;
     }
 
     const newItem = {
-      ...formData,
-      id: Date.now(), // simple unique id
+      id: Date.now(),
+      ...formData
     };
 
-    // Add to dashboard items (via prop)
     onAddItem(newItem);
-
-    // Add to context reported items (shared state)
-    addReportedItem(newItem);
-
-    // Clear form and close modal
+    
+    // Reset Form State after successful submit
     setFormData({
       name: '',
       category: 'Electronics',
@@ -55,78 +47,114 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
       status: 'Lost',
       description: ''
     });
-    setValidationError('');
-    onClose();
+
+    onClose(); // Close modal
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Report an Item">
+    <Modal isOpen={isOpen} onClose={onClose} title="Report a Lost or Found Item">
       <form onSubmit={handleSubmit} className="space-y-4">
         
-        {/* Conditional Rendering: Validation Error */}
-        {validationError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm">
-            {validationError}
-          </div>
-        )}
-
-        {/* Status Radio Buttons */}
-        <div className="flex gap-4">
-          <label className="flex-1 cursor-pointer">
-            <input type="radio" name="status" value="Lost" checked={formData.status === 'Lost'} onChange={handleChange} className="peer sr-only" />
-            <div className="text-center px-4 py-2 rounded-lg border border-gray-200 peer-checked:border-rose-500 peer-checked:bg-rose-50 peer-checked:text-rose-700 transition">
-              I Lost Something
-            </div>
-          </label>
-          <label className="flex-1 cursor-pointer">
-            <input type="radio" name="status" value="Found" checked={formData.status === 'Found'} onChange={handleChange} className="peer sr-only" />
-            <div className="text-center px-4 py-2 rounded-lg border border-gray-200 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 transition">
-              I Found Something
-            </div>
-          </label>
-        </div>
-
         {/* Controlled Input: Item Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Item Name *</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full rounded-lg border border-gray-300 px-3.5 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" placeholder="e.g. Blue Hydro Flask" />
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Item Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="e.g. Black Leather Wallet"
+            className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600 outline-none transition text-sm"
+          />
         </div>
 
-        {/* Controlled Inputs: Category & Date */}
+        {/* Controlled Select: Status (Lost / Found) */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-            <select name="category" value={formData.category} onChange={handleChange} className="w-full rounded-lg border border-gray-300 px-3.5 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition">
-              <option>Electronics</option>
-              <option>Accessories</option>
-              <option>Documents</option>
-              <option>Personal</option>
-              <option>Stationery</option>
-              <option>Other</option>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600 outline-none transition text-sm"
+            >
+              <option value="Lost">Lost</option>
+              <option value="Found">Found</option>
             </select>
           </div>
+
           <div>
-             <label className="block text-sm font-medium text-gray-700 mb-1">Date *</label>
-             <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full rounded-lg border border-gray-300 px-3.5 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600 outline-none transition text-sm"
+            >
+              <option value="Electronics">Electronics</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Documents">Documents</option>
+              <option value="Personal">Personal</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
         </div>
 
         {/* Controlled Input: Location */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Location *</label>
-          <input type="text" name="location" value={formData.location} onChange={handleChange} className="w-full rounded-lg border border-gray-300 px-3.5 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" placeholder="e.g. Library 2nd Floor" />
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Location <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            placeholder="e.g. Library 2nd Floor, Room 301"
+            className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600 outline-none transition text-sm"
+          />
         </div>
 
-        {/* Controlled Input: Description */}
+        {/* Controlled Textarea: Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
-          <textarea name="description" value={formData.description} onChange={handleChange} rows="3" className="w-full rounded-lg border border-gray-300 px-3.5 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition" placeholder="Provide details (color, brand, identifying marks...)"></textarea>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Description <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            name="description"
+            rows="3"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Provide key details, distinct marks, color, brand..."
+            className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600 outline-none transition text-sm"
+          ></textarea>
         </div>
 
-        <button type="submit" className="w-full bg-primary hover:bg-primary-hover text-white font-medium py-2.5 rounded-lg transition-colors mt-2">
-          Submit Report
-        </button>
+        {/* Validation Error Banner */}
+        {validationError && (
+          <div className="p-3 bg-red-50 text-red-600 text-xs rounded-lg border border-red-200">
+            {validationError}
+          </div>
+        )}
 
+        {/* Submit Buttons */}
+        <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow transition"
+          >
+            Submit Report
+          </button>
+        </div>
       </form>
     </Modal>
   );

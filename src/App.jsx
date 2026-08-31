@@ -6,14 +6,14 @@ import Footer from './components/Footer';
 import ReportItemModal from './components/ReportItemModal';
 import ItemDetailsModal from './components/ItemDetailsModal';
 import useLostItems from './hooks/useLostItems';
-import { LostFoundContext, LostFoundProvider } from './context/LostFoundContext';
+import { ThemeContext, ThemeProvider } from './context/ThemeContext';
 
 function MainApp() {
-  // 1. CUSTOM HOOK (Reusing data loading, state, and item management logic)
+  // 1. CUSTOM HOOK: Reusing data loading, spinner state & adding new item logic
   const { items, loading, error, addItem } = useLostItems();
 
-  // 2. USECONTEXT (Consuming global user authentication & application state)
-  const { user, login } = useContext(LostFoundContext);
+  // 2. USECONTEXT: Consuming global ThemeContext (Light/Dark mode)
+  const { theme } = useContext(ThemeContext);
 
   // Active View & Modal state
   const [currentPage, setCurrentPage] = useState('home');
@@ -23,10 +23,6 @@ function MainApp() {
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
-
-  // Login form state
-  const [loginEmail, setLoginEmail] = useState('student@university.edu');
-  const [loginPassword, setLoginPassword] = useState('password123');
 
   // Search Filtering logic
   const filteredItems = useMemo(() => {
@@ -39,7 +35,7 @@ function MainApp() {
     });
   }, [items, searchQuery, filterStatus]);
 
-  // 3. USEEFFECT (Side Effect: Updating document title on load/filter change)
+  // 3. USEEFFECT: Side Effect — Updates document title when component mounts/updates
   useEffect(() => {
     if (loading) {
       document.title = "FoundIt | Loading Items...";
@@ -48,18 +44,7 @@ function MainApp() {
     }
   }, [filteredItems, loading]);
 
-  // Handle Login form submission (Updates useContext global user state)
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    if (loginEmail) {
-      const name = loginEmail.split('@')[0];
-      const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
-      login(formattedName, loginEmail);
-      setCurrentPage('dashboard');
-    }
-  };
-
-  // Handle Adding Item from modal (Calls custom hook addItem function)
+  // Handle Adding Item from modal
   const handleAddItem = (newItem) => {
     addItem(newItem);
     if (currentPage !== 'dashboard') {
@@ -73,7 +58,7 @@ function MainApp() {
       <HeroSection setCurrentPage={setCurrentPage} setShowReportModal={setShowReportModal} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Recently Reported Items</h2>
+          <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Recently Reported Items</h2>
           <button
             onClick={() => setCurrentPage('dashboard')}
             className="text-indigo-600 hover:underline text-sm font-semibold"
@@ -83,9 +68,9 @@ function MainApp() {
         </div>
 
         {loading ? (
-          <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
+          <div className={`text-center py-12 rounded-xl border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-3"></div>
-            <p className="text-gray-600 font-medium">Loading items...</p>
+            <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} font-medium`}>Loading items via custom hook...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -103,7 +88,7 @@ function MainApp() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Lost & Found Dashboard</h1>
+          <h1 className={`text-3xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Lost & Found Dashboard</h1>
           <p className="text-sm text-gray-500 mt-1">Campus Lost and Found Directory</p>
         </div>
         <button 
@@ -116,22 +101,22 @@ function MainApp() {
 
       {/* Item Stat Counters */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
-          <p className="text-2xl font-bold text-gray-900">{loading ? '...' : items.length}</p>
+        <div className={`rounded-xl shadow-sm border p-4 text-center ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+          <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{loading ? '...' : items.length}</p>
           <p className="text-sm text-gray-500">Total Items</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+        <div className={`rounded-xl shadow-sm border p-4 text-center ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
           <p className="text-2xl font-bold text-rose-600">{loading ? '...' : items.filter(i => i.status === 'Lost').length}</p>
           <p className="text-sm text-gray-500">Lost</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+        <div className={`rounded-xl shadow-sm border p-4 text-center ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
           <p className="text-2xl font-bold text-emerald-600">{loading ? '...' : items.filter(i => i.status === 'Found').length}</p>
           <p className="text-sm text-gray-500">Found</p>
         </div>
       </div>
 
       {/* Search & Filter Controls */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-8 flex flex-col sm:flex-row gap-4 items-center">
+      <div className={`p-4 rounded-xl shadow-sm border mb-8 flex flex-col sm:flex-row gap-4 items-center ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
         <div className="relative flex-grow w-full">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -141,7 +126,7 @@ function MainApp() {
             placeholder="Search items, descriptions, or locations..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-600 outline-none transition"
+            className={`w-full pl-10 pr-3 py-2 border rounded-lg outline-none transition ${theme === 'dark' ? 'bg-gray-900 border-gray-700 text-white' : 'border-gray-300 text-gray-900 focus:ring-2 focus:ring-indigo-200'}`}
           />
         </div>
         
@@ -160,9 +145,9 @@ function MainApp() {
 
       {/* Loading State */}
       {loading && (
-        <div className="text-center py-20 bg-white rounded-xl border border-gray-100 p-8">
+        <div className={`text-center py-20 rounded-xl border p-8 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-3"></div>
-          <p className="text-lg font-medium text-gray-700">Loading Lost & Found items...</p>
+          <p className={`text-lg font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>Loading Lost & Found items...</p>
         </div>
       )}
 
@@ -176,9 +161,9 @@ function MainApp() {
 
       {/* No Results */}
       {!loading && !error && filteredItems.length === 0 && (
-        <div className="text-center py-20 bg-white rounded-xl border border-gray-100">
+        <div className={`text-center py-20 rounded-xl border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
           <svg className="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <h3 className="text-lg font-medium text-gray-900">No matching items found.</h3>
+          <h3 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>No matching items found.</h3>
           <p className="mt-1 text-gray-500">Try adjusting your search query or filter selection.</p>
         </div>
       )}
@@ -194,52 +179,12 @@ function MainApp() {
     </div>
   );
 
-  // --- LOGIN VIEW ---
-  const renderLogin = () => (
-    <div className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-md border border-gray-100">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Student Login</h2>
-          <p className="text-gray-500 mt-2">Sign in to manage your items</p>
-        </div>
-        <form className="space-y-6" onSubmit={handleLoginSubmit}>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-            <input 
-              required 
-              type="email" 
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3.5 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none transition" 
-              placeholder="student@university.edu" 
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input 
-              required 
-              type="password" 
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3.5 py-2 text-gray-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 outline-none transition" 
-              placeholder="••••••••" 
-            />
-          </div>
-          <button type="submit" className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition">
-            Sign In
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 font-sans">
+    <div className={`min-h-screen flex flex-col font-sans transition-colors ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       
       {currentPage === 'home' && renderHome()}
       {currentPage === 'dashboard' && renderDashboard()}
-      {currentPage === 'login' && renderLogin()}
 
       <Footer />
 
@@ -258,12 +203,12 @@ function MainApp() {
   );
 }
 
-// Wrap MainApp inside LostFoundProvider for application-wide Context
+// Wrap MainApp inside ThemeProvider for global ThemeContext
 function App() {
   return (
-    <LostFoundProvider>
+    <ThemeProvider>
       <MainApp />
-    </LostFoundProvider>
+    </ThemeProvider>
   );
 }
 
