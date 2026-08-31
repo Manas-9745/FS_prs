@@ -5,15 +5,14 @@ import ItemCard from './components/ItemCard';
 import Footer from './components/Footer';
 import ReportItemModal from './components/ReportItemModal';
 import ItemDetailsModal from './components/ItemDetailsModal';
-import HooksBanner from './components/HooksBanner';
 import useLostItems from './hooks/useLostItems';
 import { LostFoundContext, LostFoundProvider } from './context/LostFoundContext';
 
 function MainApp() {
-  // 1. CUSTOM HOOK (Reusing common data fetching & item management logic)
+  // 1. CUSTOM HOOK (Reusing data loading, state, and item management logic)
   const { items, loading, error, addItem } = useLostItems();
 
-  // 2. USECONTEXT (Consuming global authentication state)
+  // 2. USECONTEXT (Consuming global user authentication & application state)
   const { user, login } = useContext(LostFoundContext);
 
   // Active View & Modal state
@@ -40,7 +39,7 @@ function MainApp() {
     });
   }, [items, searchQuery, filterStatus]);
 
-  // 3. USEEFFECT (Side Effect: Dynamically updating browser document title)
+  // 3. USEEFFECT (Side Effect: Updating document title on load/filter change)
   useEffect(() => {
     if (loading) {
       document.title = "FoundIt | Loading Items...";
@@ -49,7 +48,7 @@ function MainApp() {
     }
   }, [filteredItems, loading]);
 
-  // Handle Login form submission (updates useContext user state)
+  // Handle Login form submission (Updates useContext global user state)
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     if (loginEmail) {
@@ -60,7 +59,7 @@ function MainApp() {
     }
   };
 
-  // Handle Adding Item from modal (uses custom hook addItem)
+  // Handle Adding Item from modal (Calls custom hook addItem function)
   const handleAddItem = (newItem) => {
     addItem(newItem);
     if (currentPage !== 'dashboard') {
@@ -73,10 +72,6 @@ function MainApp() {
     <>
       <HeroSection setCurrentPage={setCurrentPage} setShowReportModal={setShowReportModal} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        
-        {/* Educational React Hooks Status Banner */}
-        <HooksBanner itemCount={items.length} loading={loading} />
-
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Recently Reported Items</h2>
           <button
@@ -90,7 +85,7 @@ function MainApp() {
         {loading ? (
           <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-3"></div>
-            <p className="text-gray-600 font-medium">Fetching recent data via custom hook...</p>
+            <p className="text-gray-600 font-medium">Loading items...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -106,14 +101,10 @@ function MainApp() {
   // --- DASHBOARD VIEW ---
   const renderDashboard = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
-      
-      {/* Educational React Hooks Status Banner */}
-      <HooksBanner itemCount={items.length} loading={loading} />
-
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Lost & Found Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">Experiment 2 — Functional React Hooks Application</p>
+          <p className="text-sm text-gray-500 mt-1">Campus Lost and Found Directory</p>
         </div>
         <button 
           onClick={() => setShowReportModal(true)}
@@ -172,7 +163,6 @@ function MainApp() {
         <div className="text-center py-20 bg-white rounded-xl border border-gray-100 p-8">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-3"></div>
           <p className="text-lg font-medium text-gray-700">Loading Lost & Found items...</p>
-          <p className="text-sm text-gray-400">useEffect & custom hook fetching data asynchronously</p>
         </div>
       )}
 
@@ -210,7 +200,7 @@ function MainApp() {
       <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-md border border-gray-100">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Student Login</h2>
-          <p className="text-gray-500 mt-2">Demonstrating useContext global authentication state</p>
+          <p className="text-gray-500 mt-2">Sign in to manage your items</p>
         </div>
         <form className="space-y-6" onSubmit={handleLoginSubmit}>
           <div>
@@ -236,7 +226,7 @@ function MainApp() {
             />
           </div>
           <button type="submit" className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition">
-            Sign In (Updates Context)
+            Sign In
           </button>
         </form>
       </div>
