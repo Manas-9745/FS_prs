@@ -1,12 +1,12 @@
 ﻿import React, { useContext } from 'react';
-import { ThemeContext } from '../context/ThemeContext';
+import { ItemContext } from '../context/ItemContext';
 
 const Navbar = ({ currentPage, setCurrentPage }) => {
-  // useContext() - consumes global ThemeContext for Light/Dark theme switching
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  // useContext() - consumes shared items array from ItemContext
+  const { items } = useContext(ItemContext);
 
   return (
-    <nav className={`shadow-sm sticky top-0 z-40 transition-colors ${theme === 'dark' ? 'bg-gray-900 text-white border-b border-gray-800' : 'bg-white text-gray-900 border-b border-gray-100'}`}>
+    <nav className="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center cursor-pointer" onClick={() => setCurrentPage('home')}>
@@ -27,13 +27,10 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
               Dashboard
             </button>
 
-            {/* useContext Theme Toggle Button */}
-            <button 
-              onClick={toggleTheme}
-              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow hover:bg-indigo-700 transition flex items-center space-x-1"
-            >
-              <span>{theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}</span>
-            </button>
+            {/* useContext Badge: displays shared item count from ItemContext */}
+            <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
+              Total Items: {items.length}
+            </span>
           </div>
         </div>
       </div>
