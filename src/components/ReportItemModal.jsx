@@ -1,8 +1,11 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useContext } from 'react';
 import Modal from './Modal';
+import { ItemContext } from '../context/ItemContext';
 
-const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
-  // useState() - Controlled Form: every input is controlled by state
+const ReportItemModal = ({ isOpen, onClose }) => {
+  // useContext() - consumes addItem function from ItemContext when submitting form!
+  const { addItem } = useContext(ItemContext);
+
   const [formData, setFormData] = useState({
     name: '',
     category: 'Electronics',
@@ -12,20 +15,16 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
     description: ''
   });
 
-  // useState() - Form validation error message
   const [validationError, setValidationError] = useState('');
 
-  // Event Handler: updates form state on every keystroke
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setValidationError(''); // clear error on typing
+    setValidationError('');
   };
 
-  // Form Submission with validation
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default browser submission
+    e.preventDefault();
 
-    // Form Validation (controlled component check)
     if (!formData.name.trim() || !formData.location.trim() || !formData.description.trim()) {
       setValidationError('Please fill in all required fields.');
       return;
@@ -36,9 +35,9 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
       ...formData
     };
 
-    onAddItem(newItem);
+    // useContext addItem execution!
+    addItem(newItem);
     
-    // Reset Form State after successful submit
     setFormData({
       name: '',
       category: 'Electronics',
@@ -48,14 +47,12 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
       description: ''
     });
 
-    onClose(); // Close modal
+    onClose();
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Report a Lost or Found Item">
       <form onSubmit={handleSubmit} className="space-y-4">
-        
-        {/* Controlled Input: Item Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Item Name <span className="text-red-500">*</span>
@@ -70,7 +67,6 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
           />
         </div>
 
-        {/* Controlled Select: Status (Lost / Found) */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -102,7 +98,6 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
           </div>
         </div>
 
-        {/* Controlled Input: Location */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Location <span className="text-red-500">*</span>
@@ -117,7 +112,6 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
           />
         </div>
 
-        {/* Controlled Textarea: Description */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Description <span className="text-red-500">*</span>
@@ -132,14 +126,12 @@ const ReportItemModal = ({ isOpen, onClose, onAddItem }) => {
           ></textarea>
         </div>
 
-        {/* Validation Error Banner */}
         {validationError && (
           <div className="p-3 bg-red-50 text-red-600 text-xs rounded-lg border border-red-200">
             {validationError}
           </div>
         )}
 
-        {/* Submit Buttons */}
         <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
           <button
             type="button"

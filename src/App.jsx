@@ -12,8 +12,8 @@ function MainApp() {
   // 1. CUSTOM HOOK: Reusing data loading & spinner state logic
   const { loading, error } = useLostItems();
 
-  // 2. USECONTEXT: Consuming shared items array and addItem function from ItemContext
-  const { items, addItem } = useContext(ItemContext);
+  // 2. USECONTEXT: Consuming shared items array from ItemContext
+  const { items } = useContext(ItemContext);
 
   // Active View & Modal state
   const [currentPage, setCurrentPage] = useState('home');
@@ -43,14 +43,6 @@ function MainApp() {
       document.title = `FoundIt | ${filteredItems.length} Items Listed`;
     }
   }, [filteredItems, loading]);
-
-  // Handle Adding Item from modal
-  const handleAddItem = (newItem) => {
-    addItem(newItem);
-    if (currentPage !== 'dashboard') {
-      setCurrentPage('dashboard');
-    }
-  };
 
   // --- HOME VIEW ---
   const renderHome = () => (
@@ -191,7 +183,6 @@ function MainApp() {
       <ReportItemModal 
         isOpen={showReportModal} 
         onClose={() => setShowReportModal(false)} 
-        onAddItem={handleAddItem} 
       />
       
       <ItemDetailsModal 
