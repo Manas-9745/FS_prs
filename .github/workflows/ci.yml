@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Frontend
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      # Backend
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Verify backend start script
+        working-directory: ./backend
+        run: |
+          if [ -f package.json ]; then
+            if jq -e '.scripts.start' package.json > /dev/null; then
+              echo "Start script exists"
+            else
+              echo "Error: No start script defined in package.json" && exit 1
+            fi
+          else
+            echo "Error: package.json not found" && exit 1
+          fi
+
+      - name: Finished CI
+        run: echo "CI pipeline completed successfully"

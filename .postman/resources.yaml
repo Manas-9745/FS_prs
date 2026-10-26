@@ -1,0 +1,12 @@
+# Use this workspace to collaborate
+workspace:
+  id: b75ec543-9485-40e7-8701-191d3b58638f
+
+localResources:
+  collections:
+    - ../backend/EXP 4 - Lost & Found REST API
+    - ../backend/EXP 5 - Secure REST API
+
+cloudResources:
+  collections:
+    ../postman/collections/EXP 5 - Secure REST API (Lost & Found): 2707825e-3b4a-42ab-a454-b4e68eef9918

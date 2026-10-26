@@ -1,0 +1,26 @@
+$kind: http-request
+description: "Step 13: Input validation check - rejects missing name, invalid email, short password."
+url: "{{base_url}}/api/users/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "",
+      "email": "not-a-valid-email",
+      "password": "123"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code is 400 Bad Request', function () {
+          pm.response.to.have.status(400);
+      });
+      var jsonData = pm.response.json();
+      pm.test('Validation errors returned', function () {
+          pm.expect(jsonData.errors).to.exist;
+      });
+    language: text/javascript
+order: 7000

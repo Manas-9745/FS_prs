@@ -1,0 +1,17 @@
+$kind: http-request
+description: Lost and Found Project Problem Statement integration check.
+url: "{{base_url}}/api/items"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code is 200 OK', function () {
+          pm.response.to.have.status(200);
+      });
+      var jsonData = pm.response.json();
+      pm.test('Items array returned from MongoDB Atlas', function () {
+          pm.expect(jsonData).to.be.an('array');
+          pm.expect(jsonData.length).to.be.above(0);
+      });
+    language: text/javascript
+order: 9000

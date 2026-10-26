@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./backend
+    container_name: fullstack-docker-backend-1
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: fullstack-docker-frontend-1
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

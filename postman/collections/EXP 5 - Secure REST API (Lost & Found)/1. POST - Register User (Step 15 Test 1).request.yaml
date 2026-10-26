@@ -1,0 +1,30 @@
+$kind: http-request
+description: "Step 15 Test 1: Register a new user with bcrypt password hashing."
+url: "{{base_url}}/api/users/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "student",
+      "email": "student@gmail.com",
+      "password": "student123"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code is 201 Created or 400 (if already exists)', function () {
+          pm.expect([201, 400]).to.include(pm.response.code);
+      });
+      var jsonData = pm.response.json();
+      if (pm.response.code === 201) {
+          pm.test('User registered successfully message', function () {
+              pm.expect(jsonData.message).to.eql('User registered successfully');
+              pm.expect(jsonData.userId).to.exist;
+          });
+          pm.collectionVariables.set('user_id', jsonData.userId);
+      }
+    language: text/javascript
+order: 1000

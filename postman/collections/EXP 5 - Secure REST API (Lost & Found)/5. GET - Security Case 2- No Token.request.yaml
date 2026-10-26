@@ -1,0 +1,17 @@
+$kind: http-request
+name: "5. GET - Security Case 2: No Token"
+description: "Step 16 Case 2: Access protected route without authorization header."
+url: "{{base_url}}/api/users/profile"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status code is 401 Unauthorized', function () {
+          pm.response.to.have.status(401);
+      });
+      var jsonData = pm.response.json();
+      pm.test('Error message is Access denied', function () {
+          pm.expect(jsonData.message).to.eql('Access denied');
+      });
+    language: text/javascript
+order: 5000
