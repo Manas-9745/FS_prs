@@ -82,36 +82,36 @@ const Exp6DemoSection = ({ onOpenAuthModal }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-indigo-700 via-indigo-800 to-purple-800 rounded-2xl p-6 md:p-8 text-white shadow-lg mb-8">
+      <div className="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-md mb-8 border border-slate-800">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/30 border border-indigo-400/40 text-xs font-semibold tracking-wide uppercase mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold tracking-wide uppercase mb-3">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span>Campus Security &amp; Access Control</span>
+              <span>Authentication &amp; Access Control</span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight">
-              JWT Authentication &amp; Role-Based Access Control
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+              JWT Authentication &amp; Role-Based Access
             </h1>
-            <p className="mt-2 text-indigo-100 text-sm max-w-2xl leading-relaxed">
-              Verify cryptographic claims, test protected endpoints for Students vs Security Officers, and inspect MongoDB Atlas user directory.
+            <p className="mt-1 text-slate-300 text-xs md:text-sm max-w-2xl leading-relaxed">
+              Live token inspection, role verification, and real-time MongoDB Atlas directory.
             </p>
           </div>
 
           {/* Quick Switch Buttons */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-sm p-3 rounded-xl border border-white border-opacity-20 flex flex-col gap-2 w-full md:w-auto">
-            <span className="text-xs font-semibold text-indigo-200">1-Click Account Switch:</span>
+          <div className="bg-slate-800/80 p-2.5 rounded-xl border border-slate-700 flex flex-col gap-1.5 w-full md:w-auto">
+            <span className="text-[11px] font-semibold text-slate-400 px-1">Switch Account:</span>
             <div className="flex gap-2">
               <button
                 onClick={() => handleQuickLogin('user')}
-                className="flex-1 md:flex-none px-3 py-1.5 bg-white text-indigo-700 hover:bg-indigo-50 text-xs font-bold rounded-lg shadow-sm transition"
+                className="flex-1 md:flex-none px-3 py-1.5 bg-white text-slate-900 hover:bg-slate-100 text-xs font-semibold rounded-lg transition"
               >
-                👤 Switch to Pooja (User)
+                Pooja (User)
               </button>
               <button
                 onClick={() => handleQuickLogin('admin')}
-                className="flex-1 md:flex-none px-3 py-1.5 bg-purple-500 hover:bg-purple-600 text-white text-xs font-bold rounded-lg shadow-sm transition"
+                className="flex-1 md:flex-none px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition"
               >
-                🛡️ Switch to Admin (Admin)
+                Admin
               </button>
             </div>
           </div>
@@ -126,13 +126,13 @@ const Exp6DemoSection = ({ onOpenAuthModal }) => {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-base font-bold text-gray-900">Current Auth State</h2>
               {user ? (
-                <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${
                   user.role === 'admin' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
                 }`}>
-                  ● {user.role}
+                  {user.role}
                 </span>
               ) : (
-                <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">
+                <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                   Logged Out
                 </span>
               )}
@@ -155,7 +155,7 @@ const Exp6DemoSection = ({ onOpenAuthModal }) => {
                 <div className="text-xs text-gray-600 space-y-1.5 bg-gray-50 p-3 rounded-lg border border-gray-100">
                   <p><strong className="text-gray-800">Atlas ID:</strong> <span className="font-mono text-gray-600">{user.id || user._id}</span></p>
                   <p><strong className="text-gray-800">Role:</strong> <span className="font-semibold text-indigo-600 uppercase">{user.role}</span></p>
-                  <p><strong className="text-gray-800">Atlas Status:</strong> <span className="text-emerald-700 font-semibold">🟢 Active in Atlas (test.users)</span></p>
+                  <p><strong className="text-gray-800">Atlas Status:</strong> <span className="text-emerald-700 font-semibold">Connected to MongoDB Atlas</span></p>
                   <p><strong className="text-gray-800">Last Login:</strong> <span className="text-indigo-700 font-mono">{user.lastLogin ? new Date(user.lastLogin).toLocaleTimeString() : 'Just now'}</span></p>
                   <p><strong className="text-gray-800">Login Count:</strong> <span className="bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded font-bold">{user.loginCount || 1}</span></p>
                 </div>
@@ -249,14 +249,14 @@ const Exp6DemoSection = ({ onOpenAuthModal }) => {
         </div>
       </div>
 
-      {/* Interactive Protected Routes Testing Section (From PDF Steps 14, 15, 16) */}
+      {/* Protected Routes Testing Section */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
         <div className="border-b border-gray-100 pb-4 mb-6">
           <h2 className="text-lg font-bold text-gray-900">
-            Protected Routes &amp; Role Access Verification (PDF Test Suite)
+            Protected Route &amp; Role Verification
           </h2>
           <p className="text-xs text-gray-500 mt-1">
-            Test the live backend endpoints protecting the application using JWT authentication and role authorization.
+            Test backend endpoints using your active JWT token to inspect the live JSON response.
           </p>
         </div>
 
@@ -266,37 +266,37 @@ const Exp6DemoSection = ({ onOpenAuthModal }) => {
             <div>
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold rounded">
+                  <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
                     GET /api/user/dashboard
                   </span>
-                  <h3 className="font-bold text-gray-900 text-sm mt-1">Protected Dashboard (User + Admin)</h3>
+                  <h3 className="font-bold text-gray-900 text-sm mt-1">User &amp; Admin Dashboard</h3>
                 </div>
-                <span className="text-[11px] font-semibold text-gray-500">Middleware: protect</span>
+                <span className="text-[11px] font-medium text-gray-500">Auth: Bearer Token</span>
               </div>
               <p className="text-xs text-gray-600 mb-4">
-                Requires a valid JWT Bearer token. Accessible by both regular <strong className="text-indigo-600">users</strong> and <strong className="text-purple-600">admins</strong>.
+                Accessible by authenticated users with either <span className="font-semibold text-indigo-600">user</span> or <span className="font-semibold text-purple-600">admin</span> role.
               </p>
 
               <button
                 onClick={handleTestDashboard}
                 disabled={testingDashboard}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition flex items-center justify-center gap-2"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 px-4 rounded-lg shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
               >
-                {testingDashboard ? 'Testing...' : '⚡ Send GET Request with Current JWT'}
+                {testingDashboard ? 'Requesting...' : 'Test Dashboard Endpoint'}
               </button>
             </div>
 
             {dashboardResult && (
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-semibold text-gray-700">Live Server Response:</span>
-                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-xs font-semibold text-gray-700">JSON Response:</span>
+                  <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
                     dashboardResult.status === 200 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                   }`}>
-                    Status: {dashboardResult.status} {dashboardResult.status === 200 ? 'OK' : 'Unauthorized'}
+                    {dashboardResult.status} {dashboardResult.status === 200 ? 'OK' : 'Unauthorized'}
                   </span>
                 </div>
-                <pre className="bg-slate-900 text-slate-100 text-xs p-3 rounded-lg overflow-x-auto font-mono">
+                <pre className="bg-slate-900 text-emerald-400 text-xs p-3.5 rounded-lg overflow-x-auto font-mono leading-relaxed border border-slate-800">
                   {JSON.stringify(dashboardResult.data, null, 2)}
                 </pre>
               </div>
@@ -308,41 +308,41 @@ const Exp6DemoSection = ({ onOpenAuthModal }) => {
             <div>
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <span className="inline-block px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-bold rounded">
+                  <span className="inline-block px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-semibold rounded">
                     GET /api/user/admin
                   </span>
-                  <h3 className="font-bold text-gray-900 text-sm mt-1">Admin Only Route (Role Guard)</h3>
+                  <h3 className="font-bold text-gray-900 text-sm mt-1">Admin Only Route</h3>
                 </div>
-                <span className="text-[11px] font-semibold text-gray-500">Middleware: protect + authorize("admin")</span>
+                <span className="text-[11px] font-medium text-gray-500">Role Guard: admin</span>
               </div>
               <p className="text-xs text-gray-600 mb-4">
-                Role check: If user role is <strong className="text-rose-600">user</strong>, returns <code className="bg-rose-100 text-rose-800 px-1 rounded text-xs">403 Forbidden</code>. If role is <strong className="text-purple-600">admin</strong>, returns <code className="bg-emerald-100 text-emerald-800 px-1 rounded text-xs">200 OK</code>.
+                Restricted to accounts with <span className="font-semibold text-purple-600">admin</span> role. Returns 403 Forbidden for regular users.
               </p>
 
               <button
                 onClick={handleTestAdmin}
                 disabled={testingAdmin}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition flex items-center justify-center gap-2"
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2 px-4 rounded-lg shadow-sm transition flex items-center justify-center gap-2 cursor-pointer"
               >
-                {testingAdmin ? 'Testing...' : '⚡ Test Admin Role Permission with Current JWT'}
+                {testingAdmin ? 'Requesting...' : 'Test Admin Endpoint'}
               </button>
             </div>
 
             {adminResult && (
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-semibold text-gray-700">Live Server Response:</span>
-                  <span className={`px-2 py-0.5 rounded text-xs font-bold ${
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-xs font-semibold text-gray-700">JSON Response:</span>
+                  <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
                     adminResult.status === 200
                       ? 'bg-emerald-100 text-emerald-800'
                       : adminResult.status === 403
                       ? 'bg-rose-100 text-rose-800'
                       : 'bg-amber-100 text-amber-800'
                   }`}>
-                    Status: {adminResult.status} {adminResult.status === 200 ? 'OK' : adminResult.status === 403 ? 'Forbidden' : 'Unauthorized'}
+                    {adminResult.status} {adminResult.status === 200 ? 'OK' : adminResult.status === 403 ? 'Forbidden' : 'Unauthorized'}
                   </span>
                 </div>
-                <pre className="bg-slate-900 text-slate-100 text-xs p-3 rounded-lg overflow-x-auto font-mono">
+                <pre className="bg-slate-900 text-emerald-400 text-xs p-3.5 rounded-lg overflow-x-auto font-mono leading-relaxed border border-slate-800">
                   {JSON.stringify(adminResult.data, null, 2)}
                 </pre>
               </div>
@@ -357,24 +357,24 @@ const Exp6DemoSection = ({ onOpenAuthModal }) => {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-lg font-bold text-gray-900">
-                MongoDB Atlas Cloud Live Records
+                MongoDB Atlas User Directory
               </h2>
-              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Connected to Atlas
+              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Connected
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              Registered users stored directly in the <code className="text-indigo-600 font-mono">users</code> collection on MongoDB Atlas cluster.
+              Active accounts stored in the MongoDB Atlas <code className="text-indigo-600 font-mono">users</code> collection.
             </p>
           </div>
 
           <button
             onClick={loadAtlasUsers}
             disabled={loadingUsers}
-            className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-semibold rounded-lg transition"
+            className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition cursor-pointer"
           >
-            {loadingUsers ? 'Refreshing...' : '🔄 Refresh Atlas Users'}
+            {loadingUsers ? 'Refreshing...' : 'Refresh Users'}
           </button>
         </div>
 

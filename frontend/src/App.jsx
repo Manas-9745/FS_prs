@@ -58,113 +58,87 @@ function MainApp() {
     <>
       <HeroSection setCurrentPage={setCurrentPage} setShowReportModal={setShowReportModal} />
 
-      {/* Modern Platform Highlights (Clean & Professional) */}
+      {/* Platform Features */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Feature 1: Real-Time Messenger */}
-          <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-violet-950 rounded-2xl p-5 text-white shadow-lg border border-indigo-500/20 flex flex-col justify-between group hover:border-indigo-400/40 transition">
+          <div className="bg-slate-900 rounded-2xl p-5 text-white shadow-sm border border-slate-800 flex flex-col justify-between group hover:border-slate-700 transition">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+                <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-indigo-400">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  Port 5001 Live
+                  Online
                 </span>
               </div>
-              <h3 className="text-base font-bold text-white mb-1">Live Item Messenger</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Connect instantly with owners and finders through real-time WebSockets with persistent message history.
+              <h3 className="text-base font-bold text-white mb-1">Live Messenger</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Direct messaging between finders and owners with real-time WebSocket delivery.
               </p>
             </div>
             <button
               onClick={() => setCurrentPage('chat')}
-              className="mt-4 w-full py-2 px-3 rounded-xl bg-indigo-600/80 hover:bg-indigo-600 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
+              className="mt-4 w-full py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer"
             >
               Open Live Chat &rarr;
             </button>
           </div>
 
           {/* Feature 2: Role-Based Access */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex flex-col justify-between group hover:border-indigo-300 transition">
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between group hover:border-slate-300 transition">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-600">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <span className="text-[11px] font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full border border-purple-200">
-                  RBAC Active
+                <span className="text-[11px] font-semibold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full border border-purple-200">
+                  JWT Guard
                 </span>
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-1">Campus Security &amp; Roles</h3>
+              <h3 className="text-base font-bold text-slate-900 mb-1">Authentication &amp; Roles</h3>
               <p className="text-xs text-slate-500 leading-relaxed">
-                JWT-authenticated identity system differentiating verified campus Students from Security Officers.
+                Role-based access differentiating verified users from campus administrators.
               </p>
             </div>
             <button
               onClick={() => setCurrentPage('exp6')}
-              className="mt-4 w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition flex items-center justify-center gap-1.5"
+              className="mt-4 w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              Access &amp; Role Console &rarr;
+              Access Console &rarr;
             </button>
           </div>
 
           {/* Feature 3: Verified Registry */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 flex flex-col justify-between group hover:border-indigo-300 transition">
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between group hover:border-slate-300 transition">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600">
+                <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 </div>
-                <span className="text-[11px] font-bold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
-                  Verified Directory
+                <span className="text-[11px] font-semibold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">
+                  Directory
                 </span>
               </div>
-              <h3 className="text-base font-bold text-slate-900 mb-1">Campus Item Directory</h3>
+              <h3 className="text-base font-bold text-slate-900 mb-1">Item Directory</h3>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Browse, search, and report missing personal belongings across campus libraries, hostels, and cafeteria.
+                Search, filter, and report lost or found items across campus departments.
               </p>
             </div>
             <button
               onClick={() => setCurrentPage('dashboard')}
-              className="mt-4 w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition flex items-center justify-center gap-1.5"
+              className="mt-4 w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              Browse All Items &rarr;
+              Browse Items &rarr;
             </button>
           </div>
-        {/* Feature 4: Docker Containerization */}
-        <div className="bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-950 rounded-2xl p-5 text-white shadow-lg border border-emerald-500/20 flex flex-col justify-between group hover:border-emerald-400/40 transition">
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3" />
-                </svg>
-              </div>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                Docker Ready
-              </span>
-            </div>
-            <h3 className="text-base font-bold text-white mb-1">Docker Containerization</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Deploy the entire Lost &amp; Found app with Docker. Build images, start containers, and view logs—all with a single click.
-            </p>
-          </div>
-          <button
-            onClick={() => setShowDockerModal(true)}
-            className="mt-4 w-full py-2 px-3 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
-          >
-            Show Docker Commands →
-          </button>
-        </div>
         </div>
       </div>
 

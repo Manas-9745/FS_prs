@@ -40,7 +40,7 @@ function ConnectionBadge({ status, onTestClick }) {
   const ok = status === 'connected';
   return (
     <div className="flex items-center gap-2">
-      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold transition ${
+      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-semibold transition ${
         ok ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
           : status === 'connecting' ? 'bg-amber-50 text-amber-700 border-amber-200'
           : 'bg-rose-50 text-rose-700 border-rose-200'
@@ -49,15 +49,15 @@ function ConnectionBadge({ status, onTestClick }) {
           {ok && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />}
           <span className={`relative inline-flex rounded-full h-2 w-2 ${ok ? 'bg-emerald-500' : status === 'connecting' ? 'bg-amber-500' : 'bg-rose-500'}`} />
         </span>
-        <span>{ok ? 'WebSocket: Port 5000 Live' : status === 'connecting' ? 'Connecting to :5000...' : 'Disconnected'}</span>
+        <span>{ok ? 'WebSocket Live' : status === 'connecting' ? 'Connecting...' : 'Disconnected'}</span>
       </div>
       {ok && (
         <button onClick={onTestClick}
-          className="px-3 py-1.5 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+          className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-semibold transition flex items-center gap-1 cursor-pointer">
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          Test Server (5000)
+          Test Connection
         </button>
       )}
     </div>
@@ -259,82 +259,61 @@ const ChatSection = ({ onOpenAuthModal, initialItemId = null }) => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow flex flex-col">
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 pb-4 border-b border-slate-200 gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Campus Live Messenger</h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">WebSockets</span>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Live Messenger</h1>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">Real-Time</span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">Real-time bidirectional messaging — messages appear instantly in every open tab</p>
+          <p className="text-xs text-slate-500 mt-1">Instant messaging connected to MongoDB Atlas</p>
         </div>
-        <ConnectionBadge status={connStatus} onTestClick={handleTestServer} />
-      </div>
-
-      {/* Dual-tab guide banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/30 rounded-2xl p-4 mb-6 text-white shadow-lg">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-sm">🧪</span>
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-indigo-300 uppercase tracking-wider">Real-Time Dual-Tab Test</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-1" />
-                  Instant Sync
-                </span>
-              </div>
-              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                Open this page in <strong>two browser tabs</strong>. Log in as <strong>Student 1</strong> in Tab 1 and <strong>Student 2</strong> in Tab 2. Select the same item room in both tabs. Send a message — it appears in the other tab <strong>instantly, no refresh needed</strong>.
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-semibold text-slate-400">Quick Login:</span>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+            <span className="text-[11px] font-semibold text-slate-500 px-2">Account:</span>
             {[
-              { key: 'student1', label: '👤 Student 1 (Pooja)', email: 'pooja@gmail.com', color: 'indigo' },
-              { key: 'student2', label: '👤 Student 2 (Aarav)', email: 'aarav@college.edu', color: 'indigo' },
-              { key: 'admin',    label: '🛡️ Officer (Admin)',  email: 'admin@gmail.com',   color: 'purple' },
-            ].map(({ key, label, email, color }) => (
+              { key: 'student1', label: 'Pooja (User)', email: 'pooja@gmail.com' },
+              { key: 'student2', label: 'Aarav (User)', email: 'aarav@college.edu' },
+              { key: 'admin',    label: 'Admin',        email: 'admin@gmail.com' },
+            ].map(({ key, label, email }) => (
               <button key={key} onClick={() => quickLogin(key)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer ${
                   user?.email === email
-                    ? `bg-${color}-600 text-white`
-                    : 'bg-white/10 text-slate-200 hover:bg-white/20'
+                    ? 'bg-white text-indigo-700 shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}>
                 {label}
               </button>
             ))}
           </div>
+          <ConnectionBadge status={connStatus} onTestClick={handleTestServer} />
         </div>
       </div>
 
       {/* Not signed in */}
       {!user && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm max-w-lg mx-auto my-8">
-          <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-indigo-600">
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm max-w-md mx-auto my-12">
+          <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mx-auto mb-4 text-indigo-600">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-1">Sign In to Enter Live Messenger</h3>
-          <p className="text-xs text-slate-500 mb-6 max-w-sm mx-auto">
-            Pick a demo account to test real-time chat instantly.
+          <h3 className="text-lg font-bold text-slate-900 mb-1">Select an Account to Chat</h3>
+          <p className="text-xs text-slate-500 mb-6">
+            Choose a profile to join item conversation rooms.
           </p>
-          <div className="flex flex-col gap-2.5 max-w-xs mx-auto">
+          <div className="flex flex-col gap-2 max-w-xs mx-auto">
             <button onClick={() => quickLogin('student1')}
-              className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
-              👤 Continue as Student 1 (Pooja)
+              className="w-full py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs shadow-sm transition cursor-pointer">
+              Continue as Pooja (User)
             </button>
             <button onClick={() => quickLogin('student2')}
-              className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer">
-              👤 Continue as Student 2 (Aarav)
+              className="w-full py-2 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-xs transition cursor-pointer">
+              Continue as Aarav (User)
             </button>
-            <button onClick={onOpenAuthModal}
-              className="text-xs text-slate-500 hover:text-indigo-600 font-semibold mt-2">
-              Open custom login &rarr;
+            <button onClick={() => quickLogin('admin')}
+              className="w-full py-2 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-xs transition cursor-pointer">
+              Continue as Admin
             </button>
           </div>
         </div>
@@ -553,22 +532,22 @@ const ChatSection = ({ onOpenAuthModal, initialItemId = null }) => {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 font-bold text-lg">✓</div>
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 font-bold text-sm">OK</div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-900">WebSocket Live on Port 5000</h3>
-                  <p className="text-[11px] text-emerald-600 font-semibold">Real-Time Server Operational</p>
+                  <h3 className="text-base font-bold text-slate-900">Live Gateway Status</h3>
+                  <p className="text-[11px] text-emerald-600 font-medium">Real-Time Connection Active</p>
                 </div>
               </div>
-              <button onClick={() => setShowDiagnostic(false)} className="text-slate-400 hover:text-slate-600 p-1 text-xl leading-none">✕</button>
+              <button onClick={() => setShowDiagnostic(false)} className="text-slate-400 hover:text-slate-600 p-1 text-base leading-none">✕</button>
             </div>
             <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-2 text-xs">
               {[
-                ['Server Port',       '5000 (ws://localhost:5000)', 'text-indigo-600 font-mono font-bold'],
+                ['Connection Status', 'Connected (Online)', 'text-emerald-600 font-semibold'],
                 ['Socket ID',         diagnosticData.socketId,      'font-mono text-slate-800'],
-                ['Transport',         diagnosticData.transport?.toUpperCase(), 'text-emerald-600 font-bold font-mono'],
-                ['Ping Round-Trip',   `${diagnosticData.latency} ms`, 'font-bold font-mono'],
-                ['Authenticated User',`${diagnosticData.userName} (${diagnosticData.userRole})`, 'font-bold'],
-                ['Active Channel',    `item:${selectedItemId}`,     'font-mono text-slate-600'],
+                ['Transport',         diagnosticData.transport?.toUpperCase(), 'text-indigo-600 font-semibold font-mono'],
+                ['Latency',           `${diagnosticData.latency} ms`, 'font-semibold font-mono'],
+                ['Authenticated User',`${diagnosticData.userName} (${diagnosticData.userRole})`, 'font-semibold'],
+                ['Active Room',       `item:${selectedItemId}`,     'font-mono text-slate-600'],
               ].map(([label, val, cls]) => (
                 <div key={label} className="flex justify-between py-1 border-b border-slate-200/60 last:border-0">
                   <span className="text-slate-500">{label}:</span>
@@ -576,10 +555,9 @@ const ChatSection = ({ onOpenAuthModal, initialItemId = null }) => {
                 </div>
               ))}
             </div>
-            <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">{diagnosticData.message}</div>
             <button onClick={() => setShowDiagnostic(false)}
-              className="mt-4 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition">
-              Close Diagnostic
+              className="mt-4 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition">
+              Close
             </button>
           </div>
         </div>
