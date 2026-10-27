@@ -139,7 +139,7 @@ function MainApp() {
               Browse All Items &rarr;
             </button>
           </div>
-        <!-- Feature 4: Docker Containerization -->
+        {/* Feature 4: Docker Containerization */}
         <div className="bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-950 rounded-2xl p-5 text-white shadow-lg border border-emerald-500/20 flex flex-col justify-between group hover:border-emerald-400/40 transition">
           <div>
             <div className="flex items-center justify-between mb-3">

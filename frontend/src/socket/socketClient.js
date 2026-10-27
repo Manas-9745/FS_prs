@@ -3,8 +3,7 @@
 // Caller must disconnect() when done (useEffect cleanup).
 
 import { io } from "socket.io-client";
-
-const BACKEND_URL = "http://localhost:5000";
+import { BACKEND_URL } from "../config/api";
 
 /**
  * Creates and returns a Socket.IO client connected to the backend.

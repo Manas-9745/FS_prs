@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { BACKEND_URL } from '../config/api';
 
 export const AuthContext = createContext();
 
@@ -61,7 +62,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setAuthError(null);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
+      const res = await fetch('${BACKEND_URL}/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -85,7 +86,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setAuthError(null);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
+      const res = await fetch('${BACKEND_URL}/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role }),
@@ -115,7 +116,7 @@ export const AuthProvider = ({ children }) => {
   const testProtectedDashboard = async (customToken = null) => {
     const activeToken = customToken !== null ? customToken : token;
     try {
-      const res = await fetch('http://localhost:5000/api/user/dashboard', {
+      const res = await fetch('${BACKEND_URL}/api/user/dashboard', {
         method: 'GET',
         headers: activeToken ? { Authorization: `Bearer ${activeToken}` } : {},
       });
@@ -129,7 +130,7 @@ export const AuthProvider = ({ children }) => {
   const testAdminRoute = async (customToken = null) => {
     const activeToken = customToken !== null ? customToken : token;
     try {
-      const res = await fetch('http://localhost:5000/api/user/admin', {
+      const res = await fetch('${BACKEND_URL}/api/user/admin', {
         method: 'GET',
         headers: activeToken ? { Authorization: `Bearer ${activeToken}` } : {},
       });
@@ -142,7 +143,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchAllUsers = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/user/all', {
+      const res = await fetch('${BACKEND_URL}/api/user/all', {
         method: 'GET',
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });

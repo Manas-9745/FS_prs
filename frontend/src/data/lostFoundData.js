@@ -74,10 +74,12 @@ const lostFoundData = [
   }
 ];
 
+import { BACKEND_URL } from "../config/api";
+
 // Fetch items from the backend API, fallback to mock data on error
 export const fetchLostFoundItems = async () => {
   try {
-    const response = await fetch('http://localhost:5000/api/items');
+    const response = await fetch(`${BACKEND_URL}/api/items`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -91,7 +93,7 @@ export const fetchLostFoundItems = async () => {
 
 export const createLostFoundItem = async (itemData) => {
   try {
-    const response = await fetch('http://localhost:5000/api/items', {
+    const response = await fetch(`${BACKEND_URL}/api/items`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

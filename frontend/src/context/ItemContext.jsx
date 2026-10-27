@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { fetchLostFoundItems, createLostFoundItem } from '../data/lostFoundData';
+import { BACKEND_URL } from '../config/api';
 
 // Create Context for sharing Lost & Found items state across components
 export const ItemContext = createContext();
@@ -37,7 +38,7 @@ export const ItemProvider = ({ children }) => {
 
   const removeItem = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/items/${id}`, { method: 'DELETE' });
+      await fetch(`${BACKEND_URL}/api/items/${id}`, { method: 'DELETE' });
       setItems((prevItems) => prevItems.filter(item => item._id !== id && item.id !== id));
     } catch (err) {
       console.error("Failed to delete item:", err);
